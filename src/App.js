@@ -10,39 +10,6 @@ function App() {
   const [isStreaming, setIsStreaming] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // 自动滚动到底部
-  const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      // 使用 requestAnimationFrame 确保在下一帧渲染后滚动
-      requestAnimationFrame(() => {
-        messagesEndRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "end",
-        });
-      });
-    }
-  };
-
-  // 在消息或流式状态变化时也触发滚动
-  useEffect(() => {
-    // 使用 setTimeout 确保在 DOM 更新后滚动
-    const scrollTimer = setTimeout(() => {
-      scrollToBottom();
-    }, 100); // 增加延迟以确保内容已完全渲染
-
-    return () => clearTimeout(scrollTimer); // 清理定时器
-  }, [messages, streamingMessage, isStreaming]); // 添加所有可能触发滚动的依赖项
-
-  // 在窗口大小变化时也触发滚动
-  useEffect(() => {
-    const handleResize = () => {
-      scrollToBottom();
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (input.trim() === "" || isLoading) return;
