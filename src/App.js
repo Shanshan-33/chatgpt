@@ -6,7 +6,6 @@ function App() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [streamingMessage, setStreamingMessage] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -21,7 +20,6 @@ function App() {
     // 清空输入框和流式消息
     const currentInput = input;
     setInput("");
-    setStreamingMessage("");
     setIsLoading(true);
     setIsStreaming(true);
 
@@ -30,7 +28,7 @@ function App() {
       const response = await fetch(`http://localhost:11434/api/generate`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "text/event-stream",
         },
         body: JSON.stringify({
           model: "deepseek-r1:1.5b",
@@ -67,7 +65,6 @@ function App() {
               } else if (data.response) {
                 // Ollama API 使用 response 字段而不是 chunk
                 accumulatedMessage += data.response;
-                setStreamingMessage(accumulatedMessage);
 
                 // 如果这是第一个响应块，添加新的助手消息
                 if (!assistantMessageAdded) {
