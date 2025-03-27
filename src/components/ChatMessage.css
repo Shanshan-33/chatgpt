@@ -1,0 +1,219 @@
+.chat-message {
+  display: flex;
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.user-message {
+  justify-content: flex-end;
+}
+
+.assistant-message {
+  justify-content: flex-start;
+}
+
+.message-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin: 0 8px;
+}
+
+.message-content {
+  max-width: 70%;
+  padding: 10px 16px;
+  border-radius: 12px;
+  position: relative;
+}
+
+.user-message .message-content {
+  background-color: #1a73e8;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.assistant-message .message-content {
+  background-color: #f1f3f4;
+  color: #202124;
+  border-bottom-left-radius: 4px;
+}
+
+.message-role {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.message-text {
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* 流式响应的样式 */
+.streaming {
+  /* border-left: 4px solid #ff9800; */
+  padding-left: 12px;
+  /* background-color: #fff8e1; */
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Markdown 样式 */
+.markdown-content {
+  margin: 0;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.markdown-content code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.markdown-content pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 12px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.markdown-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.markdown-content blockquote {
+  border-left: 4px solid #ddd;
+  padding-left: 16px;
+  margin-left: 0;
+  color: #666;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  padding-left: 24px;
+}
+
+.markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.markdown-content th {
+  background-color: #f2f2f2;
+}
+
+/* 打字指示器 */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.typing-indicator span {
+  height: 8px;
+  width: 8px;
+  background-color: #1a73e8;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+  animation: typing 1s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+  margin-right: 0;
+}
+
+@keyframes typing {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 最终答案的样式 */
+.assistant-message .message-content:not(.streaming) .message-text {
+  /* border-left: 4px solid #4caf50; */
+  padding-left: 12px;
+  /* background-color: #f1f8e9; */
+}
+
+/* 思考指示器样式增强 */
+.thinking-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #ff9800;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.thinking-label svg {
+  margin-right: 6px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+}
