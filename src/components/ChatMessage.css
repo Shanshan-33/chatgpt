@@ -37,7 +37,6 @@
 }
 
 .assistant-message .message-content {
-  /* background-color: #f1f3f4; */
   color: #202124;
   border-bottom-left-radius: 4px;
 }
@@ -215,23 +214,6 @@
   border-radius: 4px;
   padding: 8px 12px;
   margin-bottom: 16px;
-  font-size: 0.95em;
-  /* background-color: #fafafa; */
-}
-
-/* 可以添加一个小标签指示这是思考过程 */
-.thinking-content::before {
-  content: "思考过程";
-  display: block;
-  font-size: 0.8em;
-  font-weight: 500;
-  margin-bottom: 6px;
-  color: #666;
-}
-
-/* 回答内容的样式 */
-.answer-content {
-  /* padding-left: 12px; */
 }
 
 /* 移除流式响应的特殊样式，避免抖动 */
