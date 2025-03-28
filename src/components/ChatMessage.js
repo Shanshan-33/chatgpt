@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
@@ -7,6 +7,48 @@ import "./ChatMessage.css";
 function ChatMessage({ role, content, isLast, isStreaming }) {
   const isUser = role === "user";
   const messageRef = useRef(null);
+  const [processedContent, setProcessedContent] = useState({
+    thinking: "",
+    answer: "",
+    isThinking: false,
+  });
+
+  // 处理内容，分离思考过程和回答
+  useEffect(() => {
+    if (!isUser && content) {
+      const thinkRegex = /<think>([\s\S]*?)<\/think>/g;
+      let thinking = "";
+      let answer = content;
+      let isThinking = false;
+
+      // 检查是否有未闭合的思考标签
+      const openTagCount = (content.match(/<think>/g) || []).length;
+      const closeTagCount = (content.match(/<\/think>/g) || []).length;
+      isThinking = openTagCount > closeTagCount;
+
+      // 提取所有思考内容
+      const matches = [...content.matchAll(thinkRegex)];
+      if (matches.length > 0) {
+        thinking = matches.map((match) => match[1]).join("\n\n");
+        // 从原始内容中移除思考部分
+        answer = content.replace(thinkRegex, "");
+      }
+
+      // 处理未闭合的思考标签内容
+      if (isThinking) {
+        const lastThinkMatch = content.lastIndexOf("<think>");
+        if (lastThinkMatch !== -1) {
+          const currentThinking = content.substring(lastThinkMatch + 7); // 7 是 <think> 的长度
+          thinking = thinking
+            ? thinking + "\n\n" + currentThinking
+            : currentThinking;
+          answer = content.substring(0, lastThinkMatch);
+        }
+      }
+
+      setProcessedContent({ thinking, answer, isThinking });
+    }
+  }, [content, isUser]);
 
   // 当新消息出现或内容更新时，滚动到底部
   useEffect(() => {
@@ -31,28 +73,30 @@ function ChatMessage({ role, content, isLast, isStreaming }) {
       <div className="message-avatar">{isUser ? "👤" : "🤖"}</div>
       <div className="message-content">
         <div className="message-role">{isUser ? "You" : "AI Assistant"}</div>
-
-        {/* 思考中标签 */}
-        {/* {isStreaming && !isUser && (
-          <div className="thinking-label">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-            </svg>
-            思考中... | Thinking...
-          </div>
-        )} */}
-
         <div className={`message-text ${isStreaming ? "streaming" : ""}`}>
           {isUser ? (
             <p>{content}</p>
           ) : (
             <div className="markdown-content">
-              <ReactMarkdown
-                rehypePlugins={[rehypeSanitize]}
-                remarkPlugins={[remarkGfm]}
-              >
-                {content}
-              </ReactMarkdown>
+              {(processedContent.thinking || processedContent.isThinking) && (
+                <div className="thinking-content">
+                  <ReactMarkdown
+                    rehypePlugins={[rehypeSanitize]}
+                    remarkPlugins={[remarkGfm]}
+                  >
+                    {processedContent.thinking}
+                  </ReactMarkdown>
+                </div>
+              )}
+
+              <div className="answer-content">
+                <ReactMarkdown
+                  rehypePlugins={[rehypeSanitize]}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {processedContent.answer}
+                </ReactMarkdown>
+              </div>
             </div>
           )}
         </div>

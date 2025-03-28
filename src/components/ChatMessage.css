@@ -37,7 +37,7 @@
 }
 
 .assistant-message .message-content {
-  background-color: #f1f3f4;
+  /* background-color: #f1f3f4; */
   color: #202124;
   border-bottom-left-radius: 4px;
 }
@@ -56,9 +56,6 @@
 
 /* 流式响应的样式 */
 .streaming {
-  /* border-left: 4px solid #ff9800; */
-  padding-left: 12px;
-  /* background-color: #fff8e1; */
   position: relative;
   transition: all 0.3s ease;
 }
@@ -181,13 +178,6 @@
   }
 }
 
-/* 最终答案的样式 */
-.assistant-message .message-content:not(.streaming) .message-text {
-  /* border-left: 4px solid #4caf50; */
-  padding-left: 12px;
-  /* background-color: #f1f8e9; */
-}
-
 /* 思考指示器样式增强 */
 .thinking-label {
   font-size: 12px;
@@ -216,4 +206,36 @@
     opacity: 0.6;
     transform: scale(0.9);
   }
+}
+
+/* 思考内容的样式 */
+.thinking-content {
+  border-left: 2px solid #e9e5e5;
+  color: #8b8b8b;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  font-size: 0.95em;
+  /* background-color: #fafafa; */
+}
+
+/* 可以添加一个小标签指示这是思考过程 */
+.thinking-content::before {
+  content: "思考过程";
+  display: block;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #666;
+}
+
+/* 回答内容的样式 */
+.answer-content {
+  /* padding-left: 12px; */
+}
+
+/* 移除流式响应的特殊样式，避免抖动 */
+.streaming {
+  position: relative;
+  transition: all 0.3s ease;
 }
