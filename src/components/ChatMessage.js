@@ -23,24 +23,17 @@ function ChatMessage({ role, content, isLast, isStreaming }) {
   // 处理内容，分离思考过程和回答
   useEffect(() => {
     if (isUser || !content) return;
-    
+
     const processAssistantContent = () => {
       const thinkRegex = /<think>([\s\S]*?)<\/think>/g;
       let thinking = "";
       let answer = content;
-      
+
       // 检查是否有未闭合的思考标签
       const openTagCount = (content.match(/<think>/g) || []).length;
       const closeTagCount = (content.match(/<\/think>/g) || []).length;
       const isThinking = openTagCount > closeTagCount;
-      
-      // 提取已完成的思考内容
-      const matches = [...content.matchAll(thinkRegex)];
-      if (matches.length > 0) {
-        thinking = matches.map((match) => match[1]).join("\n\n");
-        answer = content.replace(thinkRegex, "");
-      }
-      
+
       // 处理未闭合的思考标签内容
       if (isThinking) {
         const lastThinkMatch = content.lastIndexOf("<think>");
@@ -52,10 +45,17 @@ function ChatMessage({ role, content, isLast, isStreaming }) {
           answer = content.substring(0, lastThinkMatch);
         }
       }
-      
+
+      // 提取已完成的思考内容
+      const matches = [...content.matchAll(thinkRegex)];
+      if (matches.length > 0) {
+        thinking = matches.map((match) => match[1]).join("\n\n");
+        answer = content.replace(thinkRegex, "");
+      }
+
       return { thinking, answer, isThinking };
     };
-    
+
     setProcessedContent(processAssistantContent());
   }, [content, isUser]);
 
@@ -72,9 +72,7 @@ function ChatMessage({ role, content, isLast, isStreaming }) {
   }, [content, isLast, isStreaming]);
 
   // 渲染用户消息
-  const renderUserMessage = () => (
-    <p>{content}</p>
-  );
+  const renderUserMessage = () => <p>{content}</p>;
 
   // 渲染助手消息
   const renderAssistantMessage = () => (
@@ -105,13 +103,15 @@ function ChatMessage({ role, content, isLast, isStreaming }) {
 
   return (
     <div
-      className={`chat-message ${isUser ? "user-message" : "assistant-message"}`}
+      className={`chat-message ${
+        isUser ? "user-message" : "assistant-message"
+      }`}
       ref={messageRef}
     >
       <div className="message-avatar">{isUser ? "👤" : "🤖"}</div>
       <div className="message-content">
         <div className="message-role">{isUser ? "You" : "AI Assistant"}</div>
-        
+
         <div className={`message-text ${isStreaming ? "streaming" : ""}`}>
           {isUser ? renderUserMessage() : renderAssistantMessage()}
         </div>
